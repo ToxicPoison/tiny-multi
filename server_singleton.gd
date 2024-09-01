@@ -15,7 +15,7 @@ const MAIN_MENU_PATH = "res://main_menu/main_menu.tscn"
 #info for each player (keys are player IDs)
 var players = {}
 #local player info
-var player_info = {"name":"Name"}
+var player_info = {"name":"Name", "team":0}
 var players_loaded := 0
 var kick_reason : String = ""
 var kick_reasons = ["Peacefully disconnected from server", "Server has been stopped", "Kicked from server by authority"]
@@ -49,7 +49,7 @@ func create_game():
 func remove_multiplayer_peer():
 	multiplayer.multiplayer_peer = null
 
-#server_singleton.load_scene.rpc(filepath) to change scene
+#ServerSingleton.load_scene.rpc(filepath) to change scene
 @rpc("call_local", "reliable")
 func load_scene(scene_path):
 	get_tree().change_scene_to_file(scene_path)

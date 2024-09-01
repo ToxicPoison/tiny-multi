@@ -11,9 +11,30 @@ var travel : float = 0.0
 
 @onready var sprite = $Body
 
+
+#add rpc
+@rpc("any_peer", "call_local", "reliable")
+func shoot(direction : Vector2):
+	print("bang")
+	
+	
+@rpc("any_peer", "call_local", "reliable")
+func build(location : Vector2):
+	print("plop")
+
+
+func _unhandled_input(event):
+	if not is_multiplayer_authority(): return
+	
+	if event.is_action_pressed("shoot"):
+		shoot.rpc(Vector2.ZERO) #add rpc
+	if event.is_action_pressed("build"):
+		build.rpc(Vector2.ZERO) #add rpc
+
+
 func _physics_process(delta):
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
+	if not is_multiplayer_authority(): return
+	
 	var direction = Input.get_vector("left", "right", "up", "down")
 	velocity = velocity.lerp(direction * SPEED, FRICTION_FACTOR)
 

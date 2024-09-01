@@ -75,6 +75,17 @@ layout_mode = 2
 size_flags_vertical = 3
 alignment = 2
 
+[node name="ItemList" type="ItemList" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+allow_search = false
+auto_height = true
+item_count = 2
+max_columns = 10
+same_column_width = true
+fixed_column_width = 36
+item_0/text = "RED"
+item_1/text = "BLUE"
+
 [node name="StartButton" type="Button" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/VBoxContainer2"]
 layout_mode = 2
 text = "START GAME"
@@ -86,9 +97,11 @@ text = "DISCONNECT"
 
 [node name="ReadyButton" type="CheckButton" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/VBoxContainer2"]
 layout_mode = 2
+button_pressed = true
 text = "READY"
 alignment = 2
 
 [connection signal="ready_status_updated" from="." to="MarginContainer/HBoxContainer/MarginContainer/Panel/PlayerList" method="_on_lobby_ready_status_updated"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/VBoxContainer2/StartButton" to="." method="_on_start_button_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/VBoxContainer2/DisconnectButton" to="." method="_on_disconnect_button_pressed"]
 [connection signal="toggled" from="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/VBoxContainer2/ReadyButton" to="." method="_on_ready_button_toggled"]

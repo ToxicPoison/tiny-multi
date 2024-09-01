@@ -1,26 +1,41 @@
 extends Node2D
 
-const CAMERA_SPEED := 70.0
-const CAMERA_WIGGLE_ROOM := 1000.0
-
-@onready var crosshair = $CanvasLayer/Control/Crosshair
+var player_scene := preload("res://player/player.tscn")
+@onready var player_root = $Players
+@onready var crosshair = $UILayer/UI/Crosshair
 @onready var camera = $Camera2D
-@onready var player = $Player
 
-var camera_target_position := Vector2.ZERO
 
 func _ready():
+	ServerSingleton.player_loaded.rpc_id(1)
+	if ServerSingleton.is_multiplayer_authority(): 
+		ServerSingleton.connect("players_loaded_in_new_scene", start_game)
+	
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	
-	await get_tree().create_timer(1).timeout
-	$Player.tilemap = $PlatformBasic
-	print($Player.tilemap)
+	
+func start_game():
+	setup.rpc()
+	
+@rpc("authority", "call_local", "reliable")
+func setup():
+	spawn_players()
+	
+func spawn_players():
+	for player in ServerSingleton.players:
+		var new_player = player_scene.instantiate()
+		new_player.set_name(String.num_int64(player))
+		player_root.add_child(new_player)
+		new_player.set_multiplayer_authority(player)
+		if player == ServerSingleton.get_multiplayer_authority():
+			new_player.position = Vector2(100.0, 0.0)
+			new_player.set_modulate(Color.GREEN_YELLOW)
+			print("ICE CREAM")
+			print(player)
+	
 	
 func _input(event):
 	if event is InputEventMouseMotion:
 		crosshair.position = event.position
 
-func _process(delta):
-	if camera and player and camera_target_position.distance_squared_to(player.global_position) > CAMERA_WIGGLE_ROOM:
-		camera_target_position = camera_target_position.move_toward(player.global_position, CAMERA_SPEED * delta)
-		camera.global_position = camera_target_position.round()
+
