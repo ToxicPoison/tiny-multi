@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://bxji14bicgi2j"]
+
+[ext_resource type="Script" path="res://game/game.gd" id="1_etppp"]
+[ext_resource type="PackedScene" uid="uid://5ji0dqxf885x" path="res://level/platform_basic.tscn" id="1_xliap"]
+[ext_resource type="PackedScene" uid="uid://bj2ngu58tnci0" path="res://player/player.tscn" id="2_tgm3d"]
+[ext_resource type="Texture2D" uid="uid://ddoc80u0atg32" path="res://player/crosshair.png" id="4_jtugh"]
+
+[node name="Game" type="Node2D"]
+texture_filter = 1
+script = ExtResource("1_etppp")
+
+[node name="PlatformBasic" parent="." instance=ExtResource("1_xliap")]
+
+[node name="Player" parent="." instance=ExtResource("2_tgm3d")]
+position = Vector2(7, 27)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+texture_filter = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Crosshair" type="Sprite2D" parent="CanvasLayer/Control"]
+texture = ExtResource("4_jtugh")
+
+[node name="Camera2D" type="Camera2D" parent="."]

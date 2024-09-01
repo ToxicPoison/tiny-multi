@@ -1,0 +1,94 @@
+[gd_scene load_steps=5 format=3 uid="uid://b84dobdb3uc5p"]
+
+[ext_resource type="Script" path="res://lobby/lobby.gd" id="1_aqadw"]
+[ext_resource type="Script" path="res://lobby/PlayerList.gd" id="2_3ktm2"]
+[ext_resource type="Script" path="res://lobby/NameEdit.gd" id="3_fulff"]
+[ext_resource type="Script" path="res://lobby/StartButton.gd" id="4_4ctly"]
+
+[node name="Lobby" type="Control"]
+texture_filter = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_aqadw")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 28
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Panel" type="Panel" parent="MarginContainer/HBoxContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="PlayerList" type="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer/Panel"]
+layout_mode = 2
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 199.0
+offset_bottom = 202.0
+bbcode_enabled = true
+text = "Players:"
+script = ExtResource("2_3ktm2")
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "NAME:"
+
+[node name="NameEdit" type="LineEdit" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+script = ExtResource("3_fulff")
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 2
+
+[node name="StartButton" type="Button" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "START GAME"
+script = ExtResource("4_4ctly")
+
+[node name="DisconnectButton" type="Button" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "DISCONNECT"
+
+[node name="ReadyButton" type="CheckButton" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "READY"
+alignment = 2
+
+[connection signal="ready_status_updated" from="." to="MarginContainer/HBoxContainer/MarginContainer/Panel/PlayerList" method="_on_lobby_ready_status_updated"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/VBoxContainer2/DisconnectButton" to="." method="_on_disconnect_button_pressed"]
+[connection signal="toggled" from="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/VBoxContainer2/ReadyButton" to="." method="_on_ready_button_toggled"]
