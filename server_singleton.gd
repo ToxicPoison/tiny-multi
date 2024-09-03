@@ -91,12 +91,18 @@ func _on_server_disconnected():
 	server_disconnected.emit()
 
 @rpc("any_peer", "call_local", "reliable")
-func change_player_info(new_name):
+func change_player_info(new_name, new_team):
 	var sender_id := multiplayer.get_remote_sender_id()
 	var my_id := multiplayer.get_unique_id()
+	if new_name == null: new_name = players[sender_id]["name"]
+	if new_team == null:
+		new_team = players[sender_id]["team"]
+		print("NEW TEAM IS NULL!!!!!!!!!")
 	if sender_id == my_id:
 		player_info["name"] = new_name
-	players[sender_id] = {"name":new_name}
+		player_info["team"] = new_team
+	players[sender_id] = {"name":new_name, "team":new_team}
+	print(new_team)
 	player_info_modified.emit()
 
 func leave_game(reason : int):

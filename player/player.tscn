@@ -14,6 +14,7 @@ properties/0/replication_mode = 2
 [node name="Player" type="CharacterBody2D"]
 texture_filter = 1
 collision_layer = 2
+collision_mask = 5
 script = ExtResource("1_nigqe")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -25,14 +26,6 @@ offset = Vector2(0, -7)
 hframes = 4
 vframes = 2
 region_rect = Rect2(0, 0, 16, 16)
-
-[node name="Label" type="Label" parent="."]
-visible = false
-offset_left = -20.0
-offset_top = -40.0
-offset_right = 20.0
-offset_bottom = -17.0
-text = "CELL"
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_m3aa2")

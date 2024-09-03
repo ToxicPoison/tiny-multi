@@ -17,4 +17,8 @@ func _process(delta):
 			if player and camera_target_position.distance_squared_to(player.global_position) > CAMERA_WIGGLE_ROOM:
 				camera_target_position = camera_target_position.move_toward(player.global_position, CAMERA_SPEED * delta)
 				global_position = camera_target_position.round()
+				
+func reposition(point : Vector2):
+	camera_target_position = point
+	position = point
 	

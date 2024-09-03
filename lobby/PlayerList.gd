@@ -4,15 +4,14 @@ var base_text : String = "Players:\n"
 @onready var lobby = get_tree().get_current_scene()
 const NOT_READY_IMG = "res://lobby/not_ready.png"
 const READY_IMG = "res://lobby/ready.png"
-
+const COLORS = ["red", "blue"]
 
 func update_list():
 	text = "Players:"
 	for p in ServerSingleton.players:
-		var color = "orange"
+		var color = COLORS[ServerSingleton.players[p]["team"]]
 		var status_icon = NOT_READY_IMG
 		if lobby.ready_status[p]:
-			color = "cornflower_blue"
 			status_icon = READY_IMG
 		text += "\n[color=" + color + "][img]" + status_icon + "[/img]   " + ServerSingleton.players[p]["name"] + "[/color]"
 

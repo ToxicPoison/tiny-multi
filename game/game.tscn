@@ -1,17 +1,39 @@
-[gd_scene load_steps=7 format=3 uid="uid://bxji14bicgi2j"]
+[gd_scene load_steps=10 format=3 uid="uid://bxji14bicgi2j"]
 
 [ext_resource type="Script" path="res://game/game.gd" id="1_etppp"]
-[ext_resource type="PackedScene" uid="uid://5ji0dqxf885x" path="res://level/platform_basic.tscn" id="1_xliap"]
+[ext_resource type="Script" path="res://game/interface.gd" id="2_cofsg"]
+[ext_resource type="Texture2D" uid="uid://culhtjf5t3a8o" path="res://game/UI/selected.png" id="3_1gshc"]
 [ext_resource type="Texture2D" uid="uid://ddoc80u0atg32" path="res://player/crosshair.png" id="4_jtugh"]
 [ext_resource type="Texture2D" uid="uid://b37s3u4oxppxo" path="res://game/UI/floor_tile.png" id="4_lsvfk"]
 [ext_resource type="Script" path="res://game/camera.gd" id="5_cjfcu"]
 [ext_resource type="Texture2D" uid="uid://cc1jwqjhxm0j7" path="res://game/UI/wall_tile.png" id="5_to0jh"]
+[ext_resource type="Script" path="res://game/Crosshair.gd" id="6_mnjoy"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_if1ya"]
+radius = 12.0
 
 [node name="Game" type="Node2D"]
 texture_filter = 1
 script = ExtResource("1_etppp")
 
 [node name="UILayer" type="CanvasLayer" parent="."]
+script = ExtResource("2_cofsg")
+
+[node name="Crosshair" type="Node2D" parent="UILayer"]
+z_index = 10
+texture_filter = 1
+script = ExtResource("6_mnjoy")
+
+[node name="Sprite2D" type="Sprite2D" parent="UILayer/Crosshair"]
+texture = ExtResource("4_jtugh")
+
+[node name="Selection" type="TextureRect" parent="UILayer"]
+texture_filter = 1
+offset_left = 222.0
+offset_top = 244.0
+offset_right = 238.0
+offset_bottom = 260.0
+texture = ExtResource("3_1gshc")
 
 [node name="UI" type="Control" parent="UILayer"]
 texture_filter = 1
@@ -36,11 +58,13 @@ theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
 [node name="PanelContainer" type="PanelContainer" parent="UILayer/UI/MarginContainer"]
+z_index = -1
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 
 [node name="MarginContainer" type="MarginContainer" parent="UILayer/UI/MarginContainer/PanelContainer"]
+z_index = 1
 layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
@@ -50,6 +74,12 @@ theme_override_constants/margin_bottom = 5
 [node name="HBoxContainer" type="HBoxContainer" parent="UILayer/UI/MarginContainer/PanelContainer/MarginContainer"]
 layout_mode = 2
 
+[node name="TextureRect2" type="TextureRect" parent="UILayer/UI/MarginContainer/PanelContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("5_to0jh")
+
 [node name="TextureRect" type="TextureRect" parent="UILayer/UI/MarginContainer/PanelContainer/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
@@ -57,21 +87,14 @@ size_flags_vertical = 4
 mouse_filter = 0
 texture = ExtResource("4_lsvfk")
 
-[node name="TextureRect2" type="TextureRect" parent="UILayer/UI/MarginContainer/PanelContainer/MarginContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource("5_to0jh")
+[node name="CrosshairCollision" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 6
+monitorable = false
 
-[node name="Crosshair" type="Sprite2D" parent="UILayer/UI"]
-texture = ExtResource("4_jtugh")
-
-[node name="Level" type="Node2D" parent="."]
-
-[node name="PlatformBasic" parent="Level" instance=ExtResource("1_xliap")]
-
-[node name="Players" type="Node2D" parent="."]
-y_sort_enabled = true
+[node name="CrosshairCollider" type="CollisionShape2D" parent="CrosshairCollision"]
+shape = SubResource("CircleShape2D_if1ya")
+debug_color = Color(0.374166, 0.60659, 0.289372, 0.42)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 script = ExtResource("5_cjfcu")

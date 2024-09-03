@@ -7,4 +7,4 @@ func _ready():
 	
 func _on_text_changed(new_text):
 	if !new_text.is_empty():
-		ServerSingleton.change_player_info.rpc(new_text)
+		ServerSingleton.change_player_info.rpc(new_text, null)

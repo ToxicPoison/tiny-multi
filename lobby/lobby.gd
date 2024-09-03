@@ -9,7 +9,6 @@ func _ready():
 	ServerSingleton.connect("player_disconnected", _on_player_disconnected)
 	for p in ServerSingleton.players:
 		ready_status[p] = true
-		print(ready_status)
 	ready_status_updated.emit()
 	if is_multiplayer_authority():
 		pass
@@ -37,3 +36,7 @@ func _on_disconnect_button_pressed():
 
 func _on_start_button_pressed():
 	ServerSingleton.load_scene.rpc("res://game/game.tscn")
+
+
+func _on_item_list_item_selected(index):
+	ServerSingleton.change_player_info.rpc(null, index)
