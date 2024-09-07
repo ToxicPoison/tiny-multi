@@ -22,12 +22,10 @@ layer_0/tile_data = PackedInt32Array(-65536, 262144, 1, 0, 262144, 1, 65535, 262
 
 [node name="SpawnArea" parent="." instance=ExtResource("2_huex6")]
 position = Vector2(-80, 0)
-extents = Vector2(64, 64)
 
 [node name="SpawnArea2" parent="." instance=ExtResource("2_huex6")]
 position = Vector2(592, 0)
 team = 1
-extents = Vector2(64, 64)
 
 [node name="Tower" parent="." instance=ExtResource("4_mwvo4")]
 

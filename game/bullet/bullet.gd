@@ -5,7 +5,7 @@ var sender : Node2D
 var p_velocity := Vector2.ZERO # player's velocity when they fired the bullet
 var velocity := Vector2.ZERO
 var done := false
-const SPEED := 250.0
+const SPEED := 400.0
 const EXPLODE_TIME := 0.5
 const TILE_SIZE := 16
 @onready var time := EXPLODE_TIME
@@ -28,9 +28,7 @@ func _physics_process(delta):
 	
 	if bonk:
 		var team := -1
-		print(bonk.get_collider())
 		if bonk.get_collider() is Tower:
-			print("yes!")
 			team = bonk.get_collider().team
 		explode.rpc(global_position + velocity, team)
 		die()

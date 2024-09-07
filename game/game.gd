@@ -5,10 +5,14 @@ var player_root : Object
 var level_scene : PackedScene = preload("res://level/platform_basic.tscn")
 var level
 var spawnpoints = [null, null]
+var team_names = ["RED", "BLUE"]
+const COLORS = [Color.ORANGE_RED, Color.ROYAL_BLUE]
+var score = [5, 5]
 
 @onready var crosshair = $UILayer/Crosshair
 @onready var camera = $Camera2D
 @onready var ui = $UILayer
+@onready var victory_text = $UILayer/UI/VictoryText
 
 var local_player : Object
 
@@ -55,7 +59,33 @@ func spawn_players():
 		new_player.position = spawnpoints[team].get_point()
 		new_player.modulate = new_player.COLORS[team]
 	
+@rpc("authority", "call_local", "reliable")
+func dock_point(team):
+	for t in get_tree().get_nodes_in_group("tower"):
+		t.active = false
 	
-
+	score[team] -= 1
+	if score[team] <= 0:
+		victory_text.get_child(0).text = team_names[1 - team] + " HAS WON"
+		victory_text.get_child(0).modulate = COLORS[1 - team]
+		victory_text.get_child(1).text = "Sucks to be YOU, " + team_names[team] + "!"
+		victory_text.get_child(1).modulate = COLORS[team]
+		victory_text.set_visible(true)
+		await get_tree().create_timer(5.0).timeout
+		ServerSingleton.load_scene("res://lobby/lobby.tscn")
+		return
+	
+	victory_text.get_child(0).text = team_names[team] + " lost a point!"
+	victory_text.get_child(0).modulate = COLORS[team]
+	victory_text.get_child(1).text = team_names[0] + " " + String.num_int64(score[0]) + " : " + team_names[1] + " " + String.num_int64(score[1])
+	victory_text.set_visible(true)
+	
+	await get_tree().create_timer(3.0).timeout 
+	for p in get_tree().get_nodes_in_group("player"):
+		p.respawn()
+	for t in get_tree().get_nodes_in_group("tower"):
+		t.set_health(t.MAX_HEALTH)
+		t.active = true
+	victory_text.set_visible(false)
 
 

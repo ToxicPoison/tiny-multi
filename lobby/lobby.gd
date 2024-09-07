@@ -5,6 +5,7 @@ signal ready_status_updated
 var ready_status = {}
 
 func _ready():
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	ServerSingleton.connect("player_connected", _on_player_connected)
 	ServerSingleton.connect("player_disconnected", _on_player_disconnected)
 	for p in ServerSingleton.players:

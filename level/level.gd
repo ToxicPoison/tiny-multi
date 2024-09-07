@@ -1,6 +1,7 @@
 extends Node2D
 
 const TILE_SIZE := 16
+const WATER_DEPTH := 128.0
 
 func tile_position(point : Vector2) -> Vector2i:
 	var pos_rounded = point.round() / TILE_SIZE

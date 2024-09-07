@@ -4,6 +4,7 @@ const SPEED : float = 100.0
 const STEP_SIZE := 20.0
 const WALK_FRAMES := 4
 const FRICTION_FACTOR : float = 0.5
+const AIR_FRICTION_FACTOR : float = 0.2
 const TILE_SIZE := 16
 const COLORS = [Color.ORANGE_RED, Color.ROYAL_BLUE]
 const BULLET_SCENE = preload("res://game/bullet/bullet.tscn")
@@ -21,6 +22,7 @@ const BUILD_RATE := 0.15 #smaller = faster
 
 var shoot_cooldown : float = 0.0
 const SHOOT_RATE := 0.25
+const LOWEST_SHOOT_HEIGHT := 8.0
 
 var player_tiles : TileMap ##if get_cell_source_id < 0: then fall
 var level_tiles : TileMap
@@ -102,6 +104,7 @@ func _unhandled_input(event):
 
 
 func knock_back(k_velocity : Vector3):
+	if not is_multiplayer_authority(): return
 	velocity = Vector2(k_velocity.x, k_velocity.y)
 	z_speed = k_velocity.z
 	on_ground = false
@@ -109,19 +112,35 @@ func knock_back(k_velocity : Vector3):
 
 func _on_explosion(pos : Vector2):
 	if not is_multiplayer_authority(): return
-	var range := 160.0
+	var range := 80.0
 	var strength := maxf(range - position.distance_to(pos), 0.0)
 	if strength > 0.1:
-		var knock_vector := (position - pos).normalized() * strength / 5.0
+		var knock_vector := (position - pos).normalized() * strength * 3.0
+		var z_factor := 1.0
+		if absf(z_position) > 0.1:
+			z_factor = minf(1.0 / (absf(z_position) / 16.0), 1.0)
+		print(z_factor)
 		#var knock_vector := Vector2.ZERO
-		knock_back(Vector3(knock_vector.x, knock_vector.y, -strength))
+		knock_back(Vector3(knock_vector.x, knock_vector.y, -strength * 2.0) * z_factor)
+
+
+func respawn():
+	if not is_multiplayer_authority(): return
+	position = get_parent().get_spawn(team)
+	velocity = Vector2.ZERO
+	on_ground = true
+	z_position = 0.0
+	z_speed = 0.0
+	camera.reposition(position)
+
 
 func _physics_process(delta):
 	var on_tile := (check_for_tile(tile_position(position), 0) or check_for_tile(tile_position(position), 1))
-	$Shadow.set_visible(on_tile)
+	$Shadow.set_visible(on_tile and z_position < 0.1)
 	
 	####################################### LOCAL:
 	if is_multiplayer_authority():
+		if not on_tile: on_ground = false
 		if not on_ground:
 			z_speed += GRAVITY * delta
 			var last_z := z_position
@@ -130,11 +149,13 @@ func _physics_process(delta):
 				on_ground = true
 				z_position = 0.0
 				z_speed = 0.0
-		$Body.offset = Vector2(0.0, z_position - 7.0)
+			if z_position > get_parent().WATER_DEPTH:
+				respawn()
+		$Body.offset = Vector2(0.0, z_position - 8.0)
 		
 		var direction = Input.get_vector("left", "right", "up", "down")
 		if on_ground: velocity = velocity.lerp(direction * SPEED, FRICTION_FACTOR)
-
+		else: velocity = velocity.lerp(direction * SPEED, AIR_FRICTION_FACTOR)
 		# player fall into water if check_tile yields false for both (and, later, if ysort >= 0)
 			
 		if direction:
@@ -154,7 +175,7 @@ func _physics_process(delta):
 			build_cooldown = BUILD_RATE
 		
 		shoot_cooldown = maxf(shoot_cooldown - delta, 0.0)
-		if shoot_cooldown < 0.1 and Input.is_action_pressed("shoot"):
+		if shoot_cooldown < 0.1 and Input.is_action_pressed("shoot") and z_position < LOWEST_SHOOT_HEIGHT:
 			shoot.rpc((global_target - position).normalized(), velocity, "bullet" + String.num_int64(get_parent().get_child_count() + Time.get_ticks_msec()))
 			shoot_cooldown = SHOOT_RATE
 		
