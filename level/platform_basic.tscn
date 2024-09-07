@@ -1,12 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://5ji0dqxf885x"]
+[gd_scene load_steps=6 format=3 uid="uid://5ji0dqxf885x"]
 
 [ext_resource type="TileSet" uid="uid://c7e8vx5l5m5ab" path="res://env_tileset.tres" id="1_gfu40"]
+[ext_resource type="Script" path="res://level/level.gd" id="1_tedd7"]
 [ext_resource type="PackedScene" uid="uid://1towwlv547ts" path="res://level/objects/spawn_area.tscn" id="2_huex6"]
 [ext_resource type="PackedScene" uid="uid://0gj7n3t5hrac" path="res://level/objects/player_tiles.tscn" id="2_rhuau"]
 [ext_resource type="PackedScene" uid="uid://pwayatwjgs3r" path="res://level/objects/tower.tscn" id="4_mwvo4"]
 
 [node name="BasicLevel" type="Node2D"]
 y_sort_enabled = true
+script = ExtResource("1_tedd7")
 
 [node name="LevelTiles" type="TileMap" parent="."]
 y_sort_enabled = true

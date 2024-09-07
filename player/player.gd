@@ -37,6 +37,11 @@ var global_target := Vector2.ZERO
 
 @onready var sprite = $Body
 
+
+func _ready():
+	SignalBus.connect("bullet_exploded", _on_explosion)
+
+
 func check_for_tile(location : Vector2i, tilemap : int) -> bool:
 	match tilemap:
 		0:
@@ -52,16 +57,18 @@ func tile_position(point : Vector2) -> Vector2i:
 	if pos_rounded.y < 0: pos_rounded.y -= 1
 	return pos_rounded
 
+
 @rpc("any_peer", "call_local", "reliable")
-func shoot(direction : Vector2, p_velocity : Vector2) -> void:
+func shoot(direction : Vector2, p_velocity : Vector2, b_name : String) -> void:
 	var new_bullet = BULLET_SCENE.instantiate()
 	new_bullet.set_multiplayer_authority(get_multiplayer_authority())
+	new_bullet.set("sender", self)
+	new_bullet.set("name", b_name)
 	get_parent().add_child(new_bullet)
 	new_bullet.position = position
 	new_bullet.direction = direction
 	new_bullet.p_velocity = p_velocity
 	new_bullet.modulate = modulate
-	new_bullet.sender = self
 	
 	
 func build() -> void:
@@ -93,16 +100,33 @@ func _unhandled_input(event):
 		print(buildable)
 		ui.change_selection(buildable)
 
+
 func knock_back(k_velocity : Vector3):
 	velocity = Vector2(k_velocity.x, k_velocity.y)
 	z_speed = k_velocity.z
+	on_ground = false
+
+
+func _on_explosion(pos : Vector2):
+	if not is_multiplayer_authority(): return
+	var range := 160.0
+	var strength := maxf(range - position.distance_to(pos), 0.0)
+	if strength > 0.1:
+		var knock_vector := (position - pos).normalized() * strength / 5.0
+		#var knock_vector := Vector2.ZERO
+		knock_back(Vector3(knock_vector.x, knock_vector.y, -strength))
 
 func _physics_process(delta):
+	var on_tile := (check_for_tile(tile_position(position), 0) or check_for_tile(tile_position(position), 1))
+	$Shadow.set_visible(on_tile)
+	
+	####################################### LOCAL:
 	if is_multiplayer_authority():
 		if not on_ground:
 			z_speed += GRAVITY * delta
+			var last_z := z_position
 			z_position += z_speed * delta
-			if z_position > 0.0 and (check_for_tile(tile_position(position), 0) or check_for_tile(tile_position(position), 1)):
+			if z_position > 0.0 and last_z < 0.0 and on_tile:
 				on_ground = true
 				z_position = 0.0
 				z_speed = 0.0
@@ -131,7 +155,7 @@ func _physics_process(delta):
 		
 		shoot_cooldown = maxf(shoot_cooldown - delta, 0.0)
 		if shoot_cooldown < 0.1 and Input.is_action_pressed("shoot"):
-			shoot.rpc((global_target - position).normalized(), velocity)
+			shoot.rpc((global_target - position).normalized(), velocity, "bullet" + String.num_int64(get_parent().get_child_count() + Time.get_ticks_msec()))
 			shoot_cooldown = SHOOT_RATE
 		
 		move_and_slide()

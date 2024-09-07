@@ -6,11 +6,12 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_yneau"]
 radius = 4.0
 
-[node name="Bullet" type="Area2D"]
+[node name="Bullet" type="AnimatableBody2D"]
+z_index = 1
 texture_filter = 1
 collision_layer = 0
 collision_mask = 7
-monitorable = false
+sync_to_physics = false
 script = ExtResource("1_7gyu8")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

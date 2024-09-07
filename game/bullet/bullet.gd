@@ -1,10 +1,12 @@
-extends Area2D
+extends AnimatableBody2D
 
 var direction := Vector2.ZERO
 var sender : Node2D
 var p_velocity := Vector2.ZERO # player's velocity when they fired the bullet
-const SPEED := 500.0
-const EXPLODE_TIME := 0.8
+var velocity := Vector2.ZERO
+var done := false
+const SPEED := 250.0
+const EXPLODE_TIME := 0.5
 const TILE_SIZE := 16
 @onready var time := EXPLODE_TIME
 
@@ -13,25 +15,44 @@ func tile_position(point : Vector2) -> Vector2i:
 	if pos_rounded.x < 0: pos_rounded.x -= 1
 	if pos_rounded.y < 0: pos_rounded.y -= 1
 	return pos_rounded
+	
 
 func _ready():
-	if is_multiplayer_authority():
-		connect("body_entered", on_body_entered)
+	add_collision_exception_with(sender)
 
 func _physics_process(delta):
-	global_position += (direction * SPEED + p_velocity) * delta
+	if done: return
+	velocity = (direction * SPEED + p_velocity) * delta
+	var bonk := move_and_collide(velocity)
 	if not is_multiplayer_authority(): return
+	
+	if bonk:
+		var team := -1
+		print(bonk.get_collider())
+		if bonk.get_collider() is Tower:
+			print("yes!")
+			team = bonk.get_collider().team
+		explode.rpc(global_position + velocity, team)
+		die()
 	time -= delta
 	if time < 0.0:
-		explode()
+		explode.rpc(global_position + velocity, -1)
+		die()
 		
-func explode():
-	print("bye guys")
-	queue_free()
-	#knock players away
-	#damage the tower
-	#break surrounding tiles
+@rpc("any_peer", "call_local", "reliable")
+func explode(posn : Vector2, team : int) -> void:
+	done = true
+	SignalBus.bullet_exploded.emit(posn)
+	if team > -1:
+		for t in get_tree().get_nodes_in_group("tower"):
+			if t.team == team:
+				t.damage()
 	
-func on_body_entered(body):
-	if is_multiplayer_authority() and body != sender:
-		explode()
+func die():
+	free_remote.rpc()
+	await get_tree().create_timer(0.1).timeout
+	queue_free()
+	
+@rpc("any_peer", "call_remote", "reliable")
+func free_remote():
+	queue_free()

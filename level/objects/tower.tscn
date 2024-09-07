@@ -6,7 +6,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_60j0x"]
 size = Vector2(54, 12)
 
-[node name="Tower" type="AnimatableBody2D"]
+[node name="Tower" type="StaticBody2D" groups=["tower"]]
 texture_filter = 1
 collision_layer = 4
 collision_mask = 4
