@@ -6,7 +6,7 @@ signal server_disconnected
 signal players_loaded_in_new_scene
 signal player_info_modified(player_info)
 
-const PORT := 7707
+const PORT := 27015
 const DEFAULT_SERVER_IP := "127.0.0.1"
 const MAX_CONNECTIONS := 5
 

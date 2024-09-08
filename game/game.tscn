@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bxji14bicgi2j"]
+[gd_scene load_steps=12 format=3 uid="uid://bxji14bicgi2j"]
 
 [ext_resource type="Script" path="res://game/game.gd" id="1_etppp"]
 [ext_resource type="Script" path="res://game/interface.gd" id="2_cofsg"]
@@ -7,7 +7,9 @@
 [ext_resource type="Texture2D" uid="uid://b37s3u4oxppxo" path="res://game/UI/floor_tile.png" id="4_lsvfk"]
 [ext_resource type="Script" path="res://game/camera.gd" id="5_cjfcu"]
 [ext_resource type="Texture2D" uid="uid://cc1jwqjhxm0j7" path="res://game/UI/wall_tile.png" id="5_to0jh"]
+[ext_resource type="FontFile" uid="uid://dqe8ig5n2mu11" path="res://font/FontQuestLittle.ttf" id="6_25543"]
 [ext_resource type="Script" path="res://game/Crosshair.gd" id="6_mnjoy"]
+[ext_resource type="FontFile" uid="uid://df4dw5h4gxavt" path="res://font/BricksBlocks.ttf" id="9_6407y"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_if1ya"]
 radius = 12.0
@@ -57,6 +59,16 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
+[node name="ScoreLabel2" type="Label" parent="UILayer/UI/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("6_25543")
+text = "RED 0 : BLUE 0"
+horizontal_alignment = 1
+
 [node name="PanelContainer" type="PanelContainer" parent="UILayer/UI/MarginContainer"]
 z_index = -1
 layout_mode = 2
@@ -104,11 +116,17 @@ grow_vertical = 2
 
 [node name="TextLabel" type="Label" parent="UILayer/UI/VictoryText"]
 layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("9_6407y")
 text = "BLUE VICTORY"
 horizontal_alignment = 1
 
 [node name="ScoreLabel" type="Label" parent="UILayer/UI/VictoryText"]
 layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("6_25543")
 text = "0:0"
 horizontal_alignment = 1
 
