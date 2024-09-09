@@ -64,7 +64,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 5
+theme_override_constants/outline_size = 4
 theme_override_fonts/font = ExtResource("6_25543")
 text = "RED 0 : BLUE 0"
 horizontal_alignment = 1
@@ -117,9 +117,10 @@ grow_vertical = 2
 [node name="TextLabel" type="Label" parent="UILayer/UI/VictoryText"]
 layout_mode = 2
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 10
+theme_override_constants/outline_size = 7
+theme_override_constants/shadow_outline_size = 1
 theme_override_fonts/font = ExtResource("9_6407y")
-text = "BLUE VICTORY"
+text = "TEAM LOSES A POINT"
 horizontal_alignment = 1
 
 [node name="ScoreLabel" type="Label" parent="UILayer/UI/VictoryText"]

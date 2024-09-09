@@ -1,10 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://b84dobdb3uc5p"]
+[gd_scene load_steps=5 format=3 uid="uid://b84dobdb3uc5p"]
 
 [ext_resource type="Script" path="res://lobby/lobby.gd" id="1_aqadw"]
 [ext_resource type="Script" path="res://lobby/PlayerList.gd" id="2_3ktm2"]
 [ext_resource type="Script" path="res://lobby/NameEdit.gd" id="3_fulff"]
 [ext_resource type="Script" path="res://lobby/StartButton.gd" id="4_4ctly"]
-[ext_resource type="AudioStream" uid="uid://je8bam8v71ai" path="res://audio/rhode_abode.mp3" id="5_8j6nh"]
 
 [node name="Lobby" type="Control"]
 texture_filter = 1
@@ -101,11 +100,6 @@ layout_mode = 2
 button_pressed = true
 text = "READY"
 alignment = 2
-
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("5_8j6nh")
-volume_db = -1.105
-autoplay = true
 
 [connection signal="ready_status_updated" from="." to="MarginContainer/HBoxContainer/MarginContainer/Panel/PlayerList" method="_on_lobby_ready_status_updated"]
 [connection signal="item_selected" from="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/VBoxContainer2/ItemList" to="." method="_on_item_list_item_selected"]

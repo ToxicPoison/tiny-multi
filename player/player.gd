@@ -4,7 +4,7 @@ const SPEED : float = 100.0
 const STEP_SIZE := 20.0
 const WALK_FRAMES := 4
 const FRICTION_FACTOR : float = 0.5
-const AIR_FRICTION_FACTOR : float = 0.2
+const AIR_FRICTION_FACTOR : float = 0.05
 const TILE_SIZE := 16
 const COLORS = [Color.ORANGE_RED, Color.ROYAL_BLUE]
 const BULLET_SCENE = preload("res://game/bullet/bullet.tscn")
@@ -21,7 +21,7 @@ var build_cooldown : float = 0.0
 const BUILD_RATE := 0.15 #smaller = faster
 
 var shoot_cooldown : float = 0.0
-const SHOOT_RATE := 0.25
+const SHOOT_RATE := 0.7
 const LOWEST_SHOOT_HEIGHT := 8.0
 
 var player_tiles : TileMap ##if get_cell_source_id < 0: then fall
@@ -30,15 +30,16 @@ var level_tiles : TileMap
 var z_speed := 0.0
 var z_position := 0.0
 var on_ground := true
-const JUMP_SPEED := 160.0
-const GRAVITY := 980.0
+const JUMP_SPEED := 150.0
+const GRAVITY := 490.0
 var travel : float = 0.0
 var prev_pos := Vector2.ZERO
 var target := Vector2.ZERO
 var global_target := Vector2.ZERO
 
 @onready var sprite = $Body
-
+@onready var footprint = $FootprintRef
+var footprint_vectors = [Vector2i(1,1), Vector2i(1,-1), Vector2i(-1,-1), Vector2i(-1,1)]
 
 func _ready():
 	SignalBus.connect("bullet_exploded", _on_explosion)
@@ -77,17 +78,22 @@ func build() -> void:
 	if global_target.distance_squared_to(position) > 6400.0: return
 	if buildable == 0 and crosshair.is_colliding(): return
 	var location := tile_position(global_target)
+	if player_tiles.get_cell_atlas_coords(0, location).y == 0: return
+	var has_neighbor := false
+	for t in player_tiles.get_surrounding_cells(location):
+		if check_for_tile(t, 0) or check_for_tile(t, 1):
+			has_neighbor = true
+			break
+	if not has_neighbor: return
 	if buildable == 1 and (check_for_tile(location, 0) or check_for_tile(location, 1)): return
-	place_tile.rpc(location, buildable)
+	place_tile.rpc(location, buildable, randi())
+	
+	
 	
 @rpc("any_peer", "call_local", "unreliable")
-func place_tile(location : Vector2i, buildable) -> void:
-	var atlas_pos = Vector2i(team, buildable)
-	var location_offset = Vector2i.ZERO
-	if buildable >= 1:
-		atlas_pos += Vector2i(0, 1)
-		location_offset = Vector2i(0,0)
-	player_tiles.set_cell(0, location + location_offset, 0, atlas_pos)
+func place_tile(location : Vector2i, buildable : int, random : int) -> void:
+	get_parent().build(location, team, buildable, random)
+
 
 func _unhandled_input(event):
 	if not is_multiplayer_authority(): return
@@ -106,22 +112,22 @@ func _unhandled_input(event):
 func knock_back(k_velocity : Vector3):
 	if not is_multiplayer_authority(): return
 	velocity = Vector2(k_velocity.x, k_velocity.y)
-	z_speed = k_velocity.z
-	on_ground = false
+	if z_speed < 1.0:
+		z_speed = k_velocity.z
+		on_ground = false
 
 
 func _on_explosion(pos : Vector2):
 	if not is_multiplayer_authority(): return
-	var range := 80.0
-	var strength := maxf(range - position.distance_to(pos), 0.0)
-	if strength > 0.1:
-		var knock_vector := (position - pos).normalized() * strength * 3.0
-		var z_factor := 1.0
-		if absf(z_position) > 0.1:
-			z_factor = minf(1.0 / (absf(z_position) / 16.0), 1.0)
-		print(z_factor)
-		#var knock_vector := Vector2.ZERO
-		knock_back(Vector3(knock_vector.x, knock_vector.y, -strength * 2.0) * z_factor)
+	var range := 40.0
+	if pos.distance_to(position) > range: return
+	var strength := 200.0
+	var knock_vector := (position - pos).normalized() * strength
+	var z_factor := 1.0
+	if absf(z_position) > 0.1:
+		z_factor = minf(1.0 / (absf(z_position) / 16.0), 1.0)
+		
+	knock_back(Vector3(knock_vector.x, knock_vector.y, -strength * 0.5) * z_factor)
 
 
 func respawn():
@@ -135,7 +141,12 @@ func respawn():
 
 
 func _physics_process(delta):
-	var on_tile := (check_for_tile(tile_position(position), 0) or check_for_tile(tile_position(position), 1))
+	var on_tile := false
+	for vec in footprint_vectors:
+		var p = footprint.position * Vector2(vec) + position
+		if check_for_tile(tile_position(p), 0) or check_for_tile(tile_position(p), 1):
+			on_tile = true
+			break
 	$Shadow.set_visible(on_tile and z_position < 0.1)
 	
 	####################################### LOCAL:

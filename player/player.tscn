@@ -39,3 +39,6 @@ region_rect = Rect2(0, 0, 16, 16)
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_m3aa2")
+
+[node name="FootprintRef" type="Marker2D" parent="."]
+position = Vector2(5, -2)

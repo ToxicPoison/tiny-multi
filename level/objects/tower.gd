@@ -19,7 +19,7 @@ func set_health(new_health : float) -> void:
 func damage():
 	if not active: return
 	var new_health = health - 10
-	if new_health < 20:
+	if new_health <= 20:
 		if ServerSingleton.multiplayer.multiplayer_peer.get_unique_id() == 1:
 			game.dock_point.rpc(team)
 	else:
