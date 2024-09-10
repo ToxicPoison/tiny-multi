@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://bkaxinbycl8fx"]
+[gd_scene load_steps=4 format=3 uid="uid://bkaxinbycl8fx"]
 
 [ext_resource type="Script" path="res://main_menu/main_menu.gd" id="1_sacl1"]
+[ext_resource type="FontFile" uid="uid://df4dw5h4gxavt" path="res://font/BricksBlocks.ttf" id="2_1lnld"]
+[ext_resource type="PackedScene" uid="uid://dlnfc61d66711" path="res://menus/volume_control.tscn" id="3_m27lp"]
 
 [node name="MainMenu" type="MarginContainer"]
 texture_filter = 1
@@ -22,6 +24,19 @@ script = ExtResource("1_sacl1")
 layout_mode = 2
 alignment = 1
 
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.697474, 0.466202, 0.943141, 1)
+theme_override_colors/font_shadow_color = Color(0.195021, 0.186468, 0.240139, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = ExtResource("2_1lnld")
+theme_override_font_sizes/font_size = 32
+text = "Tiny-Multi"
+horizontal_alignment = 1
+
 [node name="NameEdit" type="LineEdit" parent="VBoxContainer"]
 layout_mode = 2
 placeholder_text = "Username"
@@ -39,3 +54,6 @@ text = "HOST"
 layout_mode = 2
 placeholder_text = "Address"
 clear_button_enabled = true
+
+[node name="VolumeControl" parent="VBoxContainer" instance=ExtResource("3_m27lp")]
+layout_mode = 2

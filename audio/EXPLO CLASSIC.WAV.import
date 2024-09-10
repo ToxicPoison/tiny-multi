@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://03r6s0gk0e8w"
+path="res://.godot/imported/EXPLO CLASSIC.WAV-06773d04415580e40a91be9a73c91d49.sample"
+
+[deps]
+
+source_file="res://audio/EXPLO CLASSIC.WAV"
+dest_files=["res://.godot/imported/EXPLO CLASSIC.WAV-06773d04415580e40a91be9a73c91d49.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

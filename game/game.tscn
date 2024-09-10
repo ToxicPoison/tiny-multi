@@ -142,3 +142,9 @@ debug_color = Color(0.374166, 0.60659, 0.289372, 0.42)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 script = ExtResource("5_cjfcu")
+
+[node name="TileOutline" type="Sprite2D" parent="."]
+modulate = Color(0.698039, 1, 1, 0.419608)
+z_index = 1
+position = Vector2(148, 191)
+texture = ExtResource("3_1gshc")

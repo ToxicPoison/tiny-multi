@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://cywpy8w8m28fg"
+path="res://.godot/imported/Archived, Impulse Response, Balloon, Explode, Short Reverb SND70017.wav-27569e8de162c5db9cdb226cdc3520c8.sample"
+
+[deps]
+
+source_file="res://audio/Archived, Impulse Response, Balloon, Explode, Short Reverb SND70017.wav"
+dest_files=["res://.godot/imported/Archived, Impulse Response, Balloon, Explode, Short Reverb SND70017.wav-27569e8de162c5db9cdb226cdc3520c8.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

@@ -1,5 +1,6 @@
 extends AnimatableBody2D
 
+const EXPLOSION_SCENE := preload("res://game/bullet/explosion.tscn")
 var direction := Vector2.ZERO
 var sender : Node2D
 var p_velocity := Vector2.ZERO # player's velocity when they fired the bullet
@@ -40,6 +41,9 @@ func _physics_process(delta):
 @rpc("any_peer", "call_local", "reliable")
 func explode(posn : Vector2, team : int) -> void:
 	done = true
+	var explosion_effect = EXPLOSION_SCENE.instantiate()
+	explosion_effect.global_position = global_position
+	get_parent().add_child(explosion_effect)
 	SignalBus.bullet_exploded.emit(posn)
 	if team > -1:
 		for t in get_tree().get_nodes_in_group("tower"):

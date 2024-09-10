@@ -9,6 +9,8 @@ var team_names = ["RED", "BLUE"]
 const COLORS = [Color.ORANGE_RED, Color.ROYAL_BLUE]
 var score = [5, 5]
 
+var pause_menu : Object = null
+
 @onready var crosshair = $UILayer/Crosshair
 @onready var camera = $Camera2D
 @onready var ui = $UILayer
@@ -23,7 +25,18 @@ func _ready():
 	
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	
-	
+
+func _input(event):
+	if event.is_action_pressed("pause"):
+		if not pause_menu:
+			pause_menu = preload("res://menus/pause_menu.tscn").instantiate()
+			ui.add_child(pause_menu)
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		else:
+			pause_menu.queue_free()
+			pause_menu = null
+			Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+
 func start_game():
 	setup.rpc()
 	
@@ -56,6 +69,7 @@ func spawn_players():
 			camera.reposition(spawnpoints[team].get_point())
 			new_player.crosshair = crosshair
 			new_player.ui = ui
+			new_player.tile_outline = $TileOutline
 		new_player.position = spawnpoints[team].get_point()
 		new_player.modulate = new_player.COLORS[team]
 	

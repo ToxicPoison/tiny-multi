@@ -62,6 +62,7 @@ func player_loaded():
 		if players_loaded == players.size():
 			players_loaded_in_new_scene.emit()
 			players_loaded = 0
+	else: print("Something CRAPPY just happened!")
 
 @rpc("any_peer", "reliable")
 func _register_player(new_player_info):

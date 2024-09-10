@@ -1,7 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://bj2ngu58tnci0"]
+[gd_scene load_steps=8 format=3 uid="uid://bj2ngu58tnci0"]
 
 [ext_resource type="Texture2D" uid="uid://611xve84yh8i" path="res://player/body.png" id="1_260x4"]
 [ext_resource type="Script" path="res://player/player.gd" id="1_nigqe"]
+[ext_resource type="AudioStream" uid="uid://cywpy8w8m28fg" path="res://audio/Archived, Impulse Response, Balloon, Explode, Short Reverb SND70017.wav" id="3_bn4j3"]
+[ext_resource type="Script" path="res://audio/audio_randomizer.gd" id="4_4scfr"]
+[ext_resource type="AudioStream" uid="uid://bajhv1rn6fry3" path="res://audio/Explosions, Misc, Balloon Popping SND73228 1.wav" id="4_lo2di"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_pj1gq"]
 radius = 5.0
@@ -42,3 +45,21 @@ replication_config = SubResource("SceneReplicationConfig_m3aa2")
 
 [node name="FootprintRef" type="Marker2D" parent="."]
 position = Vector2(5, -2)
+
+[node name="ShootSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_bn4j3")
+attenuation = 3.605
+panning_strength = 1.62
+bus = &"SFX"
+script = ExtResource("4_4scfr")
+min_pitch = 0.8
+max_pitch = 1.8
+
+[node name="BuildSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_lo2di")
+volume_db = -6.456
+max_distance = 960.0
+attenuation = 2.2974
+panning_strength = 2.03
+bus = &"SFX"
+script = ExtResource("4_4scfr")

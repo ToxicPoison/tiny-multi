@@ -47,4 +47,8 @@ func build(location : Vector2i, team : int, buildable : int, random : int) -> vo
 	player_tiles.set_cell(3, location, 1, visual_atlas_pos)
 	player_tiles.set_cell(2, location, 1, visual_atlas_pos + Vector2i(VARIATIONS * 3, 0))
 	player_tiles.set_cell(1, location + Vector2i(0, int(WATER_DEPTH) / TILE_SIZE), 1, visual_atlas_pos + Vector2i(VARIATIONS * 3, 0))
-	#x coor = (random%variations) * 3
+	
+	#if random % 10 == 0:
+		#var pillar := preload("res://player/player_tile_support.tscn").instantiate()
+		#pillar.position = Vector2(location * TILE_SIZE) + Vector2(0, 16)
+		#player_tiles.add_child(pillar)

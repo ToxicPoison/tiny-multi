@@ -12,6 +12,7 @@ const BULLET_SCENE = preload("res://game/bullet/bullet.tscn")
 
 var crosshair : Object
 var camera : Camera2D
+var tile_outline : Object
 var ui : Object
 var team : int = 0
 
@@ -19,6 +20,7 @@ var num_buildables := 2
 var buildable : int = 0
 var build_cooldown : float = 0.0
 const BUILD_RATE := 0.15 #smaller = faster
+const BUILD_RANGE := 6 #in tiles 
 
 var shoot_cooldown : float = 0.0
 const SHOOT_RATE := 0.7
@@ -63,6 +65,7 @@ func tile_position(point : Vector2) -> Vector2i:
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot(direction : Vector2, p_velocity : Vector2, b_name : String) -> void:
+	$ShootSound.play_randomized()
 	var new_bullet = BULLET_SCENE.instantiate()
 	new_bullet.set_multiplayer_authority(get_multiplayer_authority())
 	new_bullet.set("sender", self)
@@ -73,18 +76,18 @@ func shoot(direction : Vector2, p_velocity : Vector2, b_name : String) -> void:
 	new_bullet.p_velocity = p_velocity
 	new_bullet.modulate = modulate
 	
+func check_for_neighbor_tile(coord : Vector2i) -> bool:
+	for t in player_tiles.get_surrounding_cells(coord):
+		if check_for_tile(t, 0) or check_for_tile(t, 1):
+			return true
+	return false
 	
 func build() -> void:
-	if global_target.distance_squared_to(position) > 6400.0: return
+	if global_target.distance_to(position) > float(BUILD_RANGE * TILE_SIZE): return
 	if buildable == 0 and crosshair.is_colliding(): return
 	var location := tile_position(global_target)
 	if player_tiles.get_cell_atlas_coords(0, location).y == 0: return
-	var has_neighbor := false
-	for t in player_tiles.get_surrounding_cells(location):
-		if check_for_tile(t, 0) or check_for_tile(t, 1):
-			has_neighbor = true
-			break
-	if not has_neighbor: return
+	#if not check_for_neighbor_tile(location): return
 	if buildable == 1 and (check_for_tile(location, 0) or check_for_tile(location, 1)): return
 	place_tile.rpc(location, buildable, randi())
 	
@@ -92,6 +95,7 @@ func build() -> void:
 	
 @rpc("any_peer", "call_local", "unreliable")
 func place_tile(location : Vector2i, buildable : int, random : int) -> void:
+	$BuildSound.play_randomized()
 	get_parent().build(location, team, buildable, random)
 
 
@@ -179,6 +183,8 @@ func _physics_process(delta):
 		target = get_viewport().get_mouse_position() - get_viewport_rect().size/2.0
 		global_target = target + camera.position
 		crosshair.position = get_viewport().get_mouse_position()
+		tile_outline.position = Vector2(tile_position(global_target) * TILE_SIZE) + Vector2(8.0,8.0)
+		tile_outline.set_visible(global_target.distance_to(position) < float(BUILD_RANGE * TILE_SIZE))
 			
 		build_cooldown = maxf(build_cooldown - delta, 0.0)
 		if build_cooldown < 0.1 and Input.is_action_pressed("build"):
