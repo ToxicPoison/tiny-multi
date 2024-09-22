@@ -1,10 +1,12 @@
-[gd_scene load_steps=16 format=3 uid="uid://x4i1j3v1jil3"]
+[gd_scene load_steps=24 format=3 uid="uid://x4i1j3v1jil3"]
 
 [ext_resource type="Texture2D" uid="uid://c27hmkayfa42v" path="res://game/bullet/explosion_circle.png" id="1_bjnce"]
 [ext_resource type="Script" path="res://game/bullet/explosion.gd" id="1_ej862"]
 [ext_resource type="Texture2D" uid="uid://c523dov2184r0" path="res://game/bullet/explosion_cloud.png" id="2_7s2n1"]
 [ext_resource type="AudioStream" uid="uid://03r6s0gk0e8w" path="res://audio/EXPLO CLASSIC.WAV" id="4_l1rxp"]
 [ext_resource type="Script" path="res://audio/audio_randomizer.gd" id="5_xg020"]
+[ext_resource type="AudioStream" uid="uid://s43e3tmoi7av" path="res://audio/Animals, Horse, Neigh 01 SND1673.wav" id="6_glexl"]
+[ext_resource type="AudioStream" uid="uid://dd3nfam1hjgnj" path="res://audio/boxing_ring_bell.mp3" id="7_y1kam"]
 
 [sub_resource type="Gradient" id="Gradient_ujggw"]
 interpolation_mode = 2
@@ -16,6 +18,33 @@ gradient = SubResource("Gradient_ujggw")
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(0.5, 1)
+
+[sub_resource type="Gradient" id="Gradient_1hl5j"]
+offsets = PackedFloat32Array(0, 0.252475, 0.544554)
+colors = PackedColorArray(1, 1, 1, 1, 0.376471, 1, 0.286275, 1, 2.69532e-06, 0.987609, 0.796513, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ehhj7"]
+gradient = SubResource("Gradient_1hl5j")
+
+[sub_resource type="Curve" id="Curve_2qq4h"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -2.409, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_v8l7b"]
+curve = SubResource("Curve_2qq4h")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_n8ols"]
+particle_flag_rotate_y = true
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 115.04
+initial_velocity_max = 141.59
+gravity = Vector3(0, 98, 0)
+scale_min = 3.0
+scale_max = 3.0
+scale_curve = SubResource("CurveTexture_v8l7b")
+scale_over_velocity_max = 124.89
+color_ramp = SubResource("GradientTexture1D_ehhj7")
 
 [sub_resource type="Gradient" id="Gradient_w3uen"]
 offsets = PackedFloat32Array(0, 0.0643564, 0.148515, 0.341584, 1)
@@ -38,15 +67,15 @@ particle_flag_rotate_y = true
 particle_flag_disable_z = true
 angle_max = 360.0
 spread = 180.0
-initial_velocity_min = 38.76
-initial_velocity_max = 131.78
+initial_velocity_min = 29.91
+initial_velocity_max = 96.38
 gravity = Vector3(0, -90, 0)
 radial_accel_min = -100.0
 radial_accel_max = -100.0
 damping_min = 31.007
 damping_max = 33.332
 scale_min = 0.6
-scale_max = 1.1
+scale_max = 0.8
 scale_curve = SubResource("CurveTexture_nwif5")
 color_ramp = SubResource("GradientTexture1D_4cr8i")
 collision_mode = 1
@@ -110,6 +139,42 @@ tracks/4/path = NodePath("GPUParticles2D:emitting")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("GPUParticles2D2:emitting")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("SuperSound:playing")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("SuperSound2:playing")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
@@ -195,7 +260,7 @@ tracks/5/keys = {
 tracks/6/type = "method"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("AudioStreamPlayer2D")
+tracks/6/path = NodePath("ExplosionSound")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
@@ -207,10 +272,139 @@ tracks/6/keys = {
 }]
 }
 
+[sub_resource type="Animation" id="Animation_6ccpr"]
+resource_name = "explosion_super"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ExplosionCircle:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("ExplosionCircle:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("ExplosionCircle:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0.86, 0.86), Vector2(1, 1), Vector2(1.095, 1.095)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("ExplosionCircle:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(0.47547, 0.730506, 0.253239, 1), Color(0, 0, 0, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("GPUParticles2D:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/5/type = "method"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath(".")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(3),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"explosion_complete"
+}]
+}
+tracks/6/type = "method"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("ExplosionSound")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"play_randomized"
+}]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("GPUParticles2D2:emitting")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("SuperSound:playing")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("SuperSound2:playing")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_aeob6"]
 _data = {
 "RESET": SubResource("Animation_vpvr1"),
-"explosion": SubResource("Animation_jvbon")
+"explosion": SubResource("Animation_jvbon"),
+"explosion_super": SubResource("Animation_6ccpr")
 }
 
 [node name="Explosion" type="Node2D"]
@@ -228,13 +422,23 @@ offset_right = 51.0
 offset_bottom = 51.0
 texture = SubResource("GradientTexture2D_n138t")
 
+[node name="GPUParticles2D2" type="GPUParticles2D" parent="."]
+emitting = false
+amount = 16
+process_material = SubResource("ParticleProcessMaterial_n8ols")
+lifetime = 0.5
+one_shot = true
+explosiveness = 0.5
+
 [node name="GPUParticles2D" type="GPUParticles2D" parent="."]
 emitting = false
 amount = 64
 process_material = SubResource("ParticleProcessMaterial_k1ugn")
 texture = ExtResource("2_7s2n1")
+lifetime = 0.6
 one_shot = true
 explosiveness = 1.0
+draw_order = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -242,12 +446,24 @@ libraries = {
 }
 autoplay = "explosion"
 
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+[node name="ExplosionSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_l1rxp")
 volume_db = -5.063
 attenuation = 3.4822
 panning_strength = 2.07
 bus = &"SFX"
 script = ExtResource("5_xg020")
-min_pitch = 0.6
-max_pitch = 1.9
+min_pitch = 0.8
+max_pitch = 1.4
+
+[node name="SuperSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_glexl")
+volume_db = -4.837
+attenuation = 3.13834
+bus = &"SFX"
+
+[node name="SuperSound2" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_y1kam")
+volume_db = -0.806
+attenuation = 3.13834
+bus = &"SFX"

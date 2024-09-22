@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://s43e3tmoi7av"
+path="res://.godot/imported/Animals, Horse, Neigh 01 SND1673.wav-6342ad9b20f65b468ee3d6779a100ab0.sample"
+
+[deps]
+
+source_file="res://audio/Animals, Horse, Neigh 01 SND1673.wav"
+dest_files=["res://.godot/imported/Animals, Horse, Neigh 01 SND1673.wav-6342ad9b20f65b468ee3d6779a100ab0.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

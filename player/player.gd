@@ -23,7 +23,7 @@ const BUILD_RATE := 0.15 #smaller = faster
 const BUILD_RANGE := 6 #in tiles 
 
 var shoot_cooldown : float = 0.0
-const SHOOT_RATE := 0.7
+const SHOOT_RATE := 0.5
 const LOWEST_SHOOT_HEIGHT := 8.0
 
 var player_tiles : TileMap ##if get_cell_source_id < 0: then fall
